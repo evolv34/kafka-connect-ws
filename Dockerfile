@@ -1,15 +1,19 @@
-FROM java:8u102-jdk
+FROM confluentinc/cp-kafka-connect:3.1.1
 
-RUN mkdir -p /opt/kafka
+RUN mkdir -p usr/share/java/kafka-connect-ws
 
-ADD /build/libs/client-connect-0.1.0.jar /opt/kafka/client-connect-0.1.0.jar
+RUN mkdir -p etc/kafka-connect-ws
 
-ADD run.sh /opt/kafka/
+ADD /build/libs/kafka-connect-websocket-0.1.0.jar usr/share/java/kafka-connect-ws/kafka-connect-websocket-0.1.0.jar
 
-RUN chmod 777 /opt/kafka/client-connect-0.1.0.jar
+ADD /properties/kafka-connect-ws/source-ws.properties etc/kafka-connect-ws/source-ws.properties
 
-RUN chmod 777 /opt/kafka/run.sh
+ADD /properties/connect-avro-standalone.properties etc/schema-registry/connect-avro-standalone.properties
+
+ADD run.sh /run.sh
+
+RUN chmod +x run.sh
 
 EXPOSE 9093
 
-CMD ["/opt/kafka/run.sh"]
+CMD ["/run.sh"]

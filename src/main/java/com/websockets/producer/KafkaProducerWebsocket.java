@@ -21,7 +21,7 @@ public class KafkaProducerWebsocket {
 	private Logger log = Logger.getLogger(getClass().getName());
 
 	static {
-		props.put("bootstrap.servers", "localhost:9092");
+		props.put("bootstrap.servers", properties.get(ConnectorConstants.BOOTSTRAP_SERVERS));
 		props.put("acks", "all");
 		props.put("retries", "0");
 		props.put("batch.size", "16384");

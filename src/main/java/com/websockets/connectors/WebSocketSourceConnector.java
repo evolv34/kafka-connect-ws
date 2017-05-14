@@ -8,12 +8,15 @@ import java.util.Map;
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.connect.connector.Task;
 import org.apache.kafka.connect.source.SourceConnector;
+import org.apache.log4j.Logger;
 
+import com.google.gson.Gson;
 import com.websockets.connectors.config.Configs;
 
 public class WebSocketSourceConnector extends SourceConnector {
 
 	private Map<String, String> config;
+	private Logger log = Logger.getLogger(getClass().getName());
 
 	@Override
 	public String version() {
@@ -23,6 +26,7 @@ public class WebSocketSourceConnector extends SourceConnector {
 	@Override
 	public void start(Map<String, String> props) {
 		config = props;
+		log.info("Configs " + new Gson().toJson(props));
 		Configs.getInstance().setProperties(props);
 	}
 
