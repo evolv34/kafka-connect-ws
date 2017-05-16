@@ -6,4 +6,5 @@ public class ConnectorConstants {
 	public final static String NAME = "name";
 	public final static String MAX_TASKS = "tasks.max";
 	public final static String BOOTSTRAP_SERVERS = "bootstrap.servers";
+	public final static String DELIMITER = ",";
 }
