@@ -11,7 +11,6 @@ import org.apache.kafka.connect.source.SourceConnector;
 import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
-import com.websockets.connectors.config.Configs;
 
 public class WebSocketSourceConnector extends SourceConnector {
 
@@ -27,7 +26,6 @@ public class WebSocketSourceConnector extends SourceConnector {
 	public void start(Map<String, String> props) {
 		config = props;
 		log.info("Configs " + new Gson().toJson(props));
-		Configs.getInstance().setProperties(props);
 	}
 
 	public Class<? extends Task> taskClass() {

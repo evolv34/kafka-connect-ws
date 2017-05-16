@@ -7,13 +7,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.source.SourceRecord;
 import org.apache.kafka.connect.source.SourceTask;
 import org.apache.log4j.Logger;
 
 import com.websockets.connectors.config.ConnectorConstants;
 import com.websockets.handler.KafkaWebSocketServer;
-import com.websockets.producer.KafkaProducerWebsocket;
 
 public class WebSocketTask extends SourceTask {
 
@@ -45,16 +45,13 @@ public class WebSocketTask extends SourceTask {
 
 	@Override
 	public List<SourceRecord> poll() throws InterruptedException {
-		ArrayList<SourceRecord> records = new ArrayList<>();
-
-		List<String> messages = KafkaProducerWebsocket.messages;
-
-		messages.forEach(message -> {
+		List<SourceRecord> records = new ArrayList<SourceRecord>();
+		String message = KafkaWebSocketServer.messageQueue.poll();
+		if (message != null) {
 			topics.forEach(topic -> {
-				records.add(new SourceRecord(srcPartition, offset, topic, null, message));
+				records.add(new SourceRecord(srcPartition, offset, topic, Schema.STRING_SCHEMA, message));
 			});
-		});
-		KafkaProducerWebsocket.messages.clear();
+		}
 		return records;
 	}
 
