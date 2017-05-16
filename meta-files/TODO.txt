@@ -1,0 +1,10 @@
+Maybe add something to the README about this limitation? I'm just worried that folks will end up confused since it only partially integrates with Kafka Connect. As is, even if the user specifies, e.g., using JSON or Avro serializers, they'll get raw String data in their topic...
+
+I think you're actually super close to a complete integration with Kafka Connect. You can get rid of KafkaProducerWebsocket and in when you create KafkaWebsocketServer, have it share a ConcurrentQueue with the WebSocketTask. Then the WebSocketTask.poll method just needs to poll() for new records on that queue. Each time it sees one it can convert it to a SourceRecord. Since you have a simple String schema, no key, and websockets won't have source partitions/offsets to support recovering from a specific point in the stream, something like
+
+String msg = queue.poll();
+return Collections.singletonList(new SourceRecord(null, null, topic, Schema.STRING_SCHEMA, msg));
+
+should work.
+
+That would get you the minimal solution. I notice that the KafkaProducerWebsocket also includes the connection the message was received on, which might be good metadata to add if you eventually had a more complex schema, or could be used to route the messages to specific topics.

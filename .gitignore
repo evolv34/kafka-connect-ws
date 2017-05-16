@@ -5,7 +5,9 @@
 .gradle/
 .project
 .settings/
+.idea/
 bin/
+*.iml
 build/
 
 
