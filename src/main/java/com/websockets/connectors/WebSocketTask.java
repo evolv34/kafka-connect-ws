@@ -54,7 +54,6 @@ public class WebSocketTask extends SourceTask {
 				records.add(new SourceRecord(srcPartition, offset, topic, null, message));
 			});
 		});
-		log.info("records====> " + records.size());
 		KafkaProducerWebsocket.messages.clear();
 		return records;
 	}
