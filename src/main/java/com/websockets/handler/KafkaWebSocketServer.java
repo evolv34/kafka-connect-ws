@@ -2,16 +2,15 @@ package com.websockets.handler;
 
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
-import com.websockets.producer.KafkaProducerWebsocket;
-
 public class KafkaWebSocketServer extends WebSocketServer {
 
-	private KafkaProducerWebsocket kafkaProducer = new KafkaProducerWebsocket();
+	public static ConcurrentLinkedQueue<String> messageQueue = new ConcurrentLinkedQueue<String>();
 
 	public KafkaWebSocketServer(int port) throws UnknownHostException {
 		super(new InetSocketAddress(port));
@@ -33,7 +32,7 @@ public class KafkaWebSocketServer extends WebSocketServer {
 
 	@Override
 	public void onMessage(WebSocket conn, String message) {
-		kafkaProducer.send(message);
+		messageQueue.add(message);
 	}
 
 	@Override
