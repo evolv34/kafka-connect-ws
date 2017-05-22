@@ -14,7 +14,6 @@ package com.websockets.connectors;
 
 import com.websockets.connectors.config.ConnectorConstants;
 import com.websockets.handler.KafkaWebSocketServer;
-import com.websockets.utils.Zookeeper;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.source.SourceRecord;
 import org.apache.kafka.connect.source.SourceTask;
@@ -29,7 +28,6 @@ public class WebSocketTask extends SourceTask {
     private KafkaWebSocketServer kafkaServer;
     private static final Map<String, String> srcPartition = Collections.singletonMap("cache", null);
     private static final Map<String, Long> offset = Collections.singletonMap("offset", 0L);
-    private Zookeeper zookeeper = new Zookeeper("localhost", 2181);
 
     private List<String> topics = null;
 
@@ -43,13 +41,11 @@ public class WebSocketTask extends SourceTask {
 
         try {
             topics = Arrays.asList(props.get(ConnectorConstants.TOPICS).split(ConnectorConstants.DELIMITER));
-            int port = zookeeper.getPort();
+            int port = 9093;
             kafkaServer = new KafkaWebSocketServer(port);
             kafkaServer.start();
 
             log.info("WebSocket server started on port: {}" + kafkaServer.getPort());
-
-            zookeeper.register();
         } catch (Exception e) {
             log.error("Could not start server ", e);
         }
@@ -72,7 +68,6 @@ public class WebSocketTask extends SourceTask {
         if (kafkaServer != null) {
             try {
                 kafkaServer.stop();
-                zookeeper.unregister();
             } catch (IOException e) {
                 log.error("Could not stop server ", e);
             } catch (InterruptedException e) {
