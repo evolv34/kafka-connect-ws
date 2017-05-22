@@ -1,8 +1,0 @@
-kafka-ws:
-  image: evolv/kafka-websocket
-  ports:
-   - "9093:9093"
-  environment:
-   BOOTSTRAP_SERVERS: 172.17.0.1:9092
-   SCHEMA_REGISTRY: http:\/\/172.17.0.1:8081
-   TOPICS: testtopic
